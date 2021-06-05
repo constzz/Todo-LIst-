@@ -1,25 +1,1 @@
-package com.gmail.konstantin.bezzemelnyi.todolist.fragments.add
-
-import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
-import com.gmail.konstantin.bezzemelnyi.todolist.R
-
-
-class AddFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_add, container, false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_fragment_menu, menu)
-    }
-
-}
+package com.gmail.konstantin.bezzemelnyi.todolist.fragments.addimport android.os.Bundleimport android.util.Logimport android.view.*import android.widget.Toastimport androidx.fragment.app.Fragmentimport androidx.fragment.app.viewModelsimport androidx.navigation.fragment.findNavControllerimport com.gmail.konstantin.bezzemelnyi.todolist.Rimport com.gmail.konstantin.bezzemelnyi.todolist.data.models.ToDoEntityimport com.gmail.konstantin.bezzemelnyi.todolist.data.viewmodel.ToDoViewModelimport com.gmail.konstantin.bezzemelnyi.todolist.databinding.FragmentAddBindingimport com.gmail.konstantin.bezzemelnyi.todolist.fragments.SharedViewModelclass AddFragment : Fragment() {    private var _binding: FragmentAddBinding? = null    private val binding get() = _binding!!    private val mToDoViewModel: ToDoViewModel by viewModels()    private val mSharedViewModel: SharedViewModel by viewModels()    override fun onCreateView(            inflater: LayoutInflater, container: ViewGroup?,            savedInstanceState: Bundle?,    ): View? {        // Inflate the layout for this fragment        _binding = FragmentAddBinding.inflate(inflater, container, false)        binding.prioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener        setHasOptionsMenu(true)        return binding.root    }    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {        inflater.inflate(R.menu.add_fragment_menu, menu)    }    override fun onOptionsItemSelected(item: MenuItem): Boolean {        if (item.itemId == R.id.menu_add) {            insertDataToDb()        }        return super.onOptionsItemSelected(item)    }    private fun insertDataToDb() {        val mTitle = binding.titleEt.text.toString()        val mPriority = binding.prioritiesSpinner.selectedItem.toString()        val mDescription = binding.descriptionEt.text.toString()        Log.d(LOG_TAG, "This title is $mTitle")        Log.d(LOG_TAG, "This description is $mDescription")        if (!mSharedViewModel.userInputIsEmpty(mTitle, mDescription)) {            val newData = ToDoEntity(                    0,                    mTitle,                    mSharedViewModel.parsePriority(mPriority),                    mDescription            )            mToDoViewModel.insertData(newData)            Toast.makeText(requireContext(), "Succesfully added", Toast.LENGTH_LONG).show()            findNavController().navigate(R.id.action_addFragment_to_listFragment)        } else {            Toast.makeText(requireContext(), "Please fill in all the fields", Toast.LENGTH_LONG).show()        }    }    override fun onDestroyView() {        super.onDestroyView()        _binding = null    }    companion object {        private const val LOG_TAG = "AddFragmentDebug"    }}
