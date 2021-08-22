@@ -25,16 +25,15 @@ class UpdateFragment : Fragment() {
     private val mToDoViewModel: ToDoViewModel by viewModels()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
-    ): View? {
-
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
 
-        binding.currentTitleEt.setText(args.currentItem.title)
-        binding.currentDescriptionEt.setText(args.currentItem.description)
+        binding.todoUpdating = args.currentItem
+
         binding.currentPrioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
-        binding.currentPrioritiesSpinner.setSelection(mSharedViewModel.parsePriority(args.currentItem.priority))
+//        binding.currentPrioritiesSpinner.setSelection(mSharedViewModel.parsePriority(args.currentItem.priority))
 
         setHasOptionsMenu(true)
 
@@ -69,16 +68,17 @@ class UpdateFragment : Fragment() {
 
         if (!mSharedViewModel.userInputIsEmpty(title, description)) {
             val updatedItem = ToDoEntity(
-                    args.currentItem.id,
-                    title,
-                    mSharedViewModel.parsePriority(priority),
-                    description
+                args.currentItem.id,
+                title,
+                mSharedViewModel.parsePriority(priority),
+                description
             )
             mToDoViewModel.updateData(updatedItem)
             Toast.makeText(requireContext(), "Successfully updated!", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
         } else {
-            Toast.makeText(requireContext(), "Please, fill in all the fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please, fill in all the fields", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -88,9 +88,11 @@ class UpdateFragment : Fragment() {
             setMessage("Are you sure you want to delete this Todo?")
             setPositiveButton("Yes") { _, _ ->
                 mToDoViewModel.deleteData(args.currentItem)
-                Toast.makeText(requireContext(),
-                        "Successfully removed '${args.currentItem.title}'",
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Successfully removed '${args.currentItem.title}'",
+                    Toast.LENGTH_SHORT
+                ).show()
                 findNavController().navigate(R.id.action_updateFragment_to_listFragment)
             }
             setNegativeButton("No") { _, _ -> }

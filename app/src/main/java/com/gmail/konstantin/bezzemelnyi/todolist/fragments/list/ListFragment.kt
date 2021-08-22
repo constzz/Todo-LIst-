@@ -16,11 +16,12 @@ import com.gmail.konstantin.bezzemelnyi.todolist.fragments.SharedViewModel
 
 class ListFragment : Fragment() {
 
+    private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val mSharedViewModel: SharedViewModel by viewModels()
+
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
 
-    private val mToDoViewModel: ToDoViewModel by viewModels()
-    private val mShareViewModel: SharedViewModel by viewModels()
     private val adapter: ListAdapter by lazy { ListAdapter() }
 
     override fun onCreateView(
@@ -30,22 +31,17 @@ class ListFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentListBinding.inflate(inflater, container, false)
 
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = mSharedViewModel
+
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
         mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->
-            mShareViewModel.checkIfDatabaseEmpty(data)
+            mSharedViewModel.checkIfDatabaseEmpty(data)
             adapter.setData(data)
         }) //notify on changes in database
-
-        mShareViewModel.emptyDatabase.observe(viewLifecycleOwner, Observer {
-            showEmptyDatabase(it)
-        })
-
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
-        }
 
         setHasOptionsMenu(true)
 
@@ -53,15 +49,6 @@ class ListFragment : Fragment() {
 
     }
 
-    private fun showEmptyDatabase(emptyDatabase: Boolean) {
-        if (emptyDatabase) {
-            binding.noDataImageView.visibility = View.VISIBLE
-            binding.noDataTextView.visibility = View.VISIBLE
-        } else {
-            binding.noDataImageView.visibility = View.INVISIBLE
-            binding.noDataTextView.visibility = View.INVISIBLE
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)

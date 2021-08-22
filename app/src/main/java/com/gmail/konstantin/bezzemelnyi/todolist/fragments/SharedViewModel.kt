@@ -48,14 +48,6 @@ class SharedViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    internal fun parsePriority(priority: Priority): Int {
-        return when (priority) {
-            Priority.HIGH -> 0
-            Priority.MEDIUM -> 1
-            Priority.LOW -> 2
-        }
-    }
-
     internal fun userInputIsEmpty(title: String, description: String): Boolean {
         return (TextUtils.isEmpty(title) || TextUtils.isEmpty(description))
     }
