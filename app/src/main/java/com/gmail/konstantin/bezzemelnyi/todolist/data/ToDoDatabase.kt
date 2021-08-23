@@ -10,7 +10,7 @@ import com.gmail.konstantin.bezzemelnyi.todolist.data.models.ToDoEntity
 
 @Database(entities = [ToDoEntity::class], exportSchema = false, version = 1)
 @TypeConverters(Converter::class)
-abstract class ToDoDatabase() : RoomDatabase() {
+abstract class ToDoDatabase : RoomDatabase() {
 
     abstract fun toDoDao(): ToDoDao
 
