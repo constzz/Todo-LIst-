@@ -14,6 +14,7 @@ import com.gmail.konstantin.bezzemelnyi.todolist.databinding.FragmentListBinding
 import com.gmail.konstantin.bezzemelnyi.todolist.fragments.SharedViewModel
 import com.gmail.konstantin.bezzemelnyi.todolist.fragments.list.adapter.ListAdapter
 import com.google.android.material.snackbar.Snackbar
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator
 
 class ListFragment : Fragment() {
 
@@ -38,6 +39,7 @@ class ListFragment : Fragment() {
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.itemAnimator = OvershootInLeftAnimator()
         recyclerView.swipeToDeleteForItems { viewHolderPosition ->
             val toDoEntityToDelete = adapter.getToDoEntity(viewHolderPosition)
             mToDoViewModel.deleteData(toDoEntityToDelete)
