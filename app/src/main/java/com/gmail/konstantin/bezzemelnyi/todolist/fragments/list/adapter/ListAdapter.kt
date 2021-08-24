@@ -2,6 +2,7 @@ package com.gmail.konstantin.bezzemelnyi.todolist.fragments.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.konstantin.bezzemelnyi.todolist.data.models.ToDoEntity
 import com.gmail.konstantin.bezzemelnyi.todolist.databinding.RowLayoutBinding
@@ -43,8 +44,10 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     }
 
     fun setData(toDoData: List<ToDoEntity>) {
+        val toDoDiffUtil = ToDoDiffUtil(this.dataList, toDoData)
+        val toDoDiffResult = DiffUtil.calculateDiff(toDoDiffUtil)
         this.dataList = toDoData
-        notifyDataSetChanged()
+        toDoDiffResult.dispatchUpdatesTo(this)
     }
 
     fun getToDoEntity(viewHolderPosition: Int): ToDoEntity {
