@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,6 +62,7 @@ class ListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)
+        setupSearchView(menu.findItem(R.id.menu_search).actionView as SearchView)
     }
 
     override fun onDestroy() {
@@ -102,6 +104,38 @@ class ListFragment : Fragment() {
             }
             .setAnchorView(anchorView)
             .show()
+    }
+
+    private fun setupSearchView(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    updateListForNewSearchQuery(it)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    updateListForNewSearchQuery(it)
+                }
+                return true
+            }
+
+        })
+    }
+
+    private fun updateListForNewSearchQuery(query: String?) {
+        val queryForSqlQuery = "%$query%"
+        mToDoViewModel.findBySearchQuery(queryForSqlQuery).observe(
+            this@ListFragment,
+            {
+                it?.let {
+                    adapter.setData(it)
+                }
+            }
+        )
+
     }
 
 }
