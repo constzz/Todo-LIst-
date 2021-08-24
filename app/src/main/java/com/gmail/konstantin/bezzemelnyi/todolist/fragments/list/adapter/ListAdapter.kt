@@ -1,4 +1,4 @@
-package com.gmail.konstantin.bezzemelnyi.todolist.fragments.list
+package com.gmail.konstantin.bezzemelnyi.todolist.fragments.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -45,6 +45,10 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     fun setData(toDoData: List<ToDoEntity>) {
         this.dataList = toDoData
         notifyDataSetChanged()
+    }
+
+    fun getToDoEntity(viewHolderPosition: Int): ToDoEntity {
+        return dataList[viewHolderPosition]
     }
 
 }
