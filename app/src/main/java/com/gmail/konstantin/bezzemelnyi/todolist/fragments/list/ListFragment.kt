@@ -6,7 +6,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gmail.konstantin.bezzemelnyi.todolist.R
 import com.gmail.konstantin.bezzemelnyi.todolist.common.extensions.swipeToDeleteForItems
@@ -46,7 +45,7 @@ class ListFragment : Fragment() {
             showUndoSnackbar(binding.root, binding.floatingActionButton)
         }
 
-        mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->
+        mToDoViewModel.getAllData.observe(viewLifecycleOwner, { data ->
             mSharedViewModel.checkIfDatabaseEmpty(data)
             adapter.setData(data)
         }) //notify on changes in database
@@ -80,9 +79,11 @@ class ListFragment : Fragment() {
             setMessage("Are you sure you want to remove all your todos?")
             setPositiveButton("Yes") { _, _ ->
                 mToDoViewModel.deleteAll()
-                Toast.makeText(requireContext(),
-                        "Go and create new todos!",
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Go and create new todos!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             setNegativeButton("No") { _, _ -> }
 
