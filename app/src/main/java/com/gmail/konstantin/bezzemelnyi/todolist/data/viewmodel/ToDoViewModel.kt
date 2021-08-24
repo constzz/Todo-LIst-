@@ -1,6 +1,7 @@
 package com.gmail.konstantin.bezzemelnyi.todolist.data.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.konstantin.bezzemelnyi.todolist.data.ToDoDatabase
@@ -14,6 +15,8 @@ class ToDoViewModel(app: Application) : AndroidViewModel(app) {
     private val repository: ToDoRepository = ToDoRepository(toDoDao)
 
     val getAllData = repository.getAllData
+
+    private var recentlyDeletedToDoEntity: ToDoEntity? = null
 
     fun insertData(toDoEntity: ToDoEntity) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -30,6 +33,7 @@ class ToDoViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteData(toDoEntity: ToDoEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteData(toDoEntity)
+            recentlyDeletedToDoEntity = toDoEntity
         }
     }
 
@@ -37,6 +41,18 @@ class ToDoViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteAll()
         }
+    }
+
+    fun restoreLatestDeletedData() {
+        recentlyDeletedToDoEntity?.let { this.insertData(it) }
+            ?: Log.e(
+                TAG,
+                "There is no recently deleted toDoEntities"
+            )
+    }
+
+    companion object {
+        const val TAG = "ToDoViewModel"
     }
 
 }
