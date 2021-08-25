@@ -72,9 +72,23 @@ class ListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.menu_priority_high -> sortListByHighPriority()
+            R.id.menu_priority_low -> sortListByLowPriority()
             R.id.delete_all -> deleteAll()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun sortListByHighPriority() {
+        mToDoViewModel.getAllDataHighPriority.observe(viewLifecycleOwner, {
+            adapter.setData(it)
+        })
+    }
+
+    private fun sortListByLowPriority() {
+        mToDoViewModel.getAllDataLowPriority.observe(viewLifecycleOwner, {
+            adapter.setData(it)
+        })
     }
 
     private fun deleteAll() {

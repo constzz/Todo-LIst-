@@ -17,6 +17,9 @@ class ToDoViewModel(app: Application) : AndroidViewModel(app) {
 
     val getAllData = repository.getAllData
 
+    val getAllDataHighPriority = repository.getAllDataHighPriority
+    val getAllDataLowPriority = repository.getAllDataLowPriority
+
     private var recentlyDeletedToDoEntity: ToDoEntity? = null
 
     fun insertData(toDoEntity: ToDoEntity) {
