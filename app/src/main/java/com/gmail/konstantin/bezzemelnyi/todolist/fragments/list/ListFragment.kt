@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.gmail.konstantin.bezzemelnyi.todolist.R
 import com.gmail.konstantin.bezzemelnyi.todolist.common.extensions.swipeToDeleteForItems
 import com.gmail.konstantin.bezzemelnyi.todolist.data.viewmodel.ToDoViewModel
@@ -39,7 +39,8 @@ class ListFragment : Fragment() {
 
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.itemAnimator = OvershootInLeftAnimator()
         recyclerView.swipeToDeleteForItems { viewHolderPosition ->
             val toDoEntityToDelete = adapter.getToDoEntity(viewHolderPosition)
