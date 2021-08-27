@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.gmail.konstantin.bezzemelnyi.todolist.R
+import com.gmail.konstantin.bezzemelnyi.todolist.common.extensions.hideSoftKeyboard
+import com.gmail.konstantin.bezzemelnyi.todolist.common.extensions.observeOnce
 import com.gmail.konstantin.bezzemelnyi.todolist.common.extensions.swipeToDeleteForItems
 import com.gmail.konstantin.bezzemelnyi.todolist.data.viewmodel.ToDoViewModel
 import com.gmail.konstantin.bezzemelnyi.todolist.databinding.FragmentListBinding
@@ -33,6 +35,8 @@ class ListFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentListBinding.inflate(inflater, container, false)
+
+        hideSoftKeyboard()
 
         binding.lifecycleOwner = this
         binding.sharedViewModel = mSharedViewModel
