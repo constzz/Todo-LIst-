@@ -146,7 +146,7 @@ class ListFragment : Fragment() {
 
     private fun updateListForNewSearchQuery(query: String?) {
         val queryForSqlQuery = "%$query%"
-        mToDoViewModel.findBySearchQuery(queryForSqlQuery).observe(
+        mToDoViewModel.findBySearchQuery(queryForSqlQuery).observeOnce(
             this@ListFragment,
             {
                 it?.let {
